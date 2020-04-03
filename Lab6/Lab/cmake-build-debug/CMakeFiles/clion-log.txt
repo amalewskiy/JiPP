@@ -1,11 +1,4 @@
 /snap/clion/107/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=gcc -G "CodeBlocks - Unix Makefiles" /home/lewskiy_/Projects/C/JiPP/Lab6/Lab
--- The C compiler identification is GNU 7.4.0
--- Check for working C compiler: /usr/bin/gcc
--- Check for working C compiler: /usr/bin/gcc -- works
--- Detecting C compiler ABI info
--- Detecting C compiler ABI info - done
--- Detecting C compile features
--- Detecting C compile features - done
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /home/lewskiy_/Projects/C/JiPP/Lab6/Lab/cmake-build-debug
