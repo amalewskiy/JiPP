@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define MAX_LINE 256
 #define MAX_LINES 200
@@ -49,7 +50,6 @@ int liczba_linij() {
 }
 
 void zad15() {
-    FILE *fd15;
     char PL[MAX_LINE], DL[MAX_LINE], q[MAX_LINE], *d[MAX_LINES];
     int len, i = -1, pl, dl, max = liczba_linij();
     fd = NULL;
@@ -62,8 +62,8 @@ void zad15() {
                "(max %d, min 1): ", max);
         scanf("%d", &pl);
         if (!(pl <= max && pl > 0)) {
-            printf("Niepoprawne wprowadzanie liczby!\n");
-            printf("Sprobuj ponownie\n");
+            printf("Niepoprawne wprowadzanie liczby!\n"
+                   "Sprobuj ponownie\n");
             continue;
         } else break;
     }
@@ -72,8 +72,8 @@ void zad15() {
                "(max %d, min 1): ", max);
         scanf("%d", &dl);
         if (!(dl <= max && dl > 0)) {
-            printf("Niepoprawne wprowadzanie liczby!\n");
-            printf("Sprobuj ponownie\n");
+            printf("Niepoprawne wprowadzanie liczby!\n"
+                   "Sprobuj ponownie\n");
             continue;
         } else break;
     }
@@ -93,6 +93,7 @@ void zad15() {
     }
     d[pl - 1] = DL;
     d[dl - 1] = PL;
+    FILE *fd15;
     fd15 = fopen("DANE_ZAD15.txt", "w");
     for (int j = 0; j < i; j++) {
         fprintf(fd15, "%s\n", d[j]);
@@ -103,7 +104,7 @@ void zad15() {
     fd15 = NULL;
 }
 
-void zad16(){
+void zad16() {
     if (!(fd = fopen("DANE.txt", "r"))) {
         printf("EROR WITH FILE\n");
         exit(2);
@@ -120,27 +121,106 @@ void zad16(){
         len = strlen(q);
         q[len - 1] = '\0';
         for (int j = 0; q[j]; j++) {
-           if (tekst[k] == q[j]) {
-               poruwnianie_tekstu++;
-               k++;
-           }
-           else{
-               break;
-           }
-           if (poruwnianie_tekstu == len_tekst - 1) {
-               printf("%d ", i + 1);
-               break;
-           }
+            if (tekst[k] == q[j]) {
+                poruwnianie_tekstu++;
+                k++;
+            } else {
+                break;
+            }
+            if (poruwnianie_tekstu == len_tekst - 1) {
+                printf("%d ", i + 1);
+                break;
+            }
         }
     }
     fclose(fd);
     fd = NULL;
 }
 
+void zad17() {
+    char LU[MAX_LINE], bufor[MAX_LINE], *d[MAX_LINES];
+    int linia_uzytkownika, po_linii, max = liczba_linij();
+    int i = -1, len;
+    fd = NULL;
+    if (!(fd = fopen("DANE.txt", "r"))) {
+        printf("EROR WITH FILE\n");
+        exit(2);
+    }
+    while (1) {
+        printf("Podaj linije ktora chcesz przeniesc"
+               " (max %d, min 1): ", max);
+        scanf("%d", &linia_uzytkownika);
+        if (!(linia_uzytkownika <= max
+              && linia_uzytkownika > 0)) {
+            printf("Niepoprawne wprowadzanie liczby!\n"
+                   "Sprobuj ponownie\n");
+            continue;
+        } else break;
+    }
+    while (1) {
+        printf("Podaj nomer linii po ktorej chcesz "
+               "wstawic swoja linije (max %d, min 1): ", max);
+        scanf("%d", &po_linii);
+        if (!(po_linii <= max && po_linii > 0)) {
+            printf("Niepoprawne wprowadzanie liczby!\n"
+                   "Sprobuj ponownie\n");
+            continue;
+        } else break;
+    }
+    while (++i < MAX_LINES && fgets(bufor, MAX_LINE, fd)) {
+        if (linia_uzytkownika == i + 1) {
+            strcpy(LU, bufor);
+            break;
+        }
+    }
+    i = -1;
+    fseek(fd, 0, SEEK_SET);
+    bool qwerty = true;
+    while (++i < MAX_LINES && fgets(bufor, MAX_LINE, fd)) {
+        if (i == linia_uzytkownika - 1 && qwerty) {
+            i--;
+            qwerty = false;
+        } else if (i == po_linii - 1) {
+            len = strlen(LU);
+            LU[len - 1] = '\0';
+            if ((d[i] = (char *) malloc((unsigned) len)) == (char *) NULL) {
+                printf("Brak pamieci\n");
+                exit(3);
+            }
+            strcpy(d[i], LU);
+            i++;
+            len = strlen(bufor);
+            bufor[len - 1] = '\0';
+            if ((d[i] = (char *) malloc((unsigned) len)) == (char *) NULL) {
+                printf("Brak pamieci\n");
+                exit(3);
+            }
+            strcpy(d[i], bufor);
+        } else {
+            len = strlen(bufor);
+            bufor[len - 1] = '\0';
+            if ((d[i] = (char *) malloc((unsigned) len)) == (char *) NULL) {
+                printf("Brak pamieci\n");
+                exit(3);
+            }
+            strcpy(d[i], bufor);
+        }
+    }
+    FILE *fd17;
+    fd17 = fopen("DANE_ZAD17.txt", "w");
+    for (int j = 0; j < i; j++) {
+        fprintf(fd17, "%s\n", d[j]);
+    }
+    fclose(fd);
+    fclose(fd17);
+    fd = NULL;
+    fd17 = NULL;
+}
+
 int main() {
     //zad11();
     //zad15();
     //zad16();
-    //zad17();
+    zad17();
     return 0;
 }
