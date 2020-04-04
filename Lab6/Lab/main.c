@@ -103,17 +103,43 @@ void zad15() {
     fd15 = NULL;
 }
 
-/*void zad16(){
+void zad16(){
     if (!(fd = fopen("DANE.txt", "r"))) {
         printf("EROR WITH FILE\n");
         exit(2);
     }
-
-}*/
+    char tekst[MAX_LINE], q[MAX_LINE];
+    int len_tekst, len, i = -1;
+    printf("Podaj tekst jaki szukasz: ");
+    fgets(tekst, MAX_LINE, stdin);
+    len_tekst = strlen(tekst);
+    tekst[len_tekst - 1] = '\0';
+    printf("Wybrany tekst znajduje sie na linijach: ");
+    while (++i < MAX_LINES && fgets(q, MAX_LINE, fd)) {
+        int k = 0, poruwnianie_tekstu = 0;
+        len = strlen(q);
+        q[len - 1] = '\0';
+        for (int j = 0; q[j]; j++) {
+           if (tekst[k] == q[j]) {
+               poruwnianie_tekstu++;
+               k++;
+           }
+           else{
+               break;
+           }
+           if (poruwnianie_tekstu == len_tekst - 1) {
+               printf("%d ", i + 1);
+               break;
+           }
+        }
+    }
+    fclose(fd);
+    fd = NULL;
+}
 
 int main() {
-    zad11();
-    zad15();
+    //zad11();
+    //zad15();
     //zad16();
     return 0;
 }
