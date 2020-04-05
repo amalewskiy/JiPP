@@ -9,8 +9,9 @@
 FILE *fd = NULL;
 
 void zad11() {
+    fd = NULL;
     if (!(fd = fopen("DANE.txt", "r"))) {
-        printf("EROR WITH FILE\n");
+        printf("Blad otwarcia zbioru\n");
         exit(2);
     }
     char b[MAX_LINE];
@@ -34,8 +35,9 @@ void zad11() {
 }
 
 int liczba_linij() {
+    fd = NULL;
     if (!(fd = fopen("DANE.txt", "r"))) {
-        printf("EROR WITH FILE\n");
+        printf("Blad otwarcia zbioru\n");
         exit(2);
     }
     char b[MAX_LINE];
@@ -54,11 +56,11 @@ void zad15() {
     int len, i = -1, pl, dl, max = liczba_linij();
     fd = NULL;
     if (!(fd = fopen("DANE.txt", "r"))) {
-        printf("EROR WITH FILE\n");
+        printf("Blad otwarcia zbioru\n");
         exit(2);
     }
     while (1) {
-        printf("Podaj nomer pierwszej linii "
+        printf("Podaj numer pierwszej linii "
                "(max %d, min 1): ", max);
         scanf("%d", &pl);
         if (!(pl <= max && pl > 0)) {
@@ -68,7 +70,7 @@ void zad15() {
         } else break;
     }
     while (1) {
-        printf("Podaj nomer drugiej linii "
+        printf("Podaj numer drugiej linii "
                "(max %d, min 1): ", max);
         scanf("%d", &dl);
         if (!(dl <= max && dl > 0)) {
@@ -106,7 +108,7 @@ void zad15() {
 
 void zad16() {
     if (!(fd = fopen("DANE.txt", "r"))) {
-        printf("EROR WITH FILE\n");
+        printf("Blad otwarcia zbioru\n");
         exit(2);
     }
     char tekst[MAX_LINE], q[MAX_LINE];
@@ -143,7 +145,7 @@ void zad17() {
     int i = -1, len;
     fd = NULL;
     if (!(fd = fopen("DANE.txt", "r"))) {
-        printf("EROR WITH FILE\n");
+        printf("Blad otwarcia zbioru\n");
         exit(2);
     }
     while (1) {
@@ -158,7 +160,7 @@ void zad17() {
         } else break;
     }
     while (1) {
-        printf("Podaj nomer linii po ktorej chcesz "
+        printf("Podaj numer linii po ktorej chcesz "
                "wstawic swoja linije (max %d, min 1): ", max);
         scanf("%d", &po_linii);
         if (!(po_linii <= max && po_linii > 0)) {
@@ -217,10 +219,59 @@ void zad17() {
     fd17 = NULL;
 }
 
+void zad18() {
+    FILE *fdd = NULL;
+    if (!(fdd = fopen("DANE_Z_DWUKROPKEM.txt", "r"))) {
+        printf("Blad otwarcia zbioru\n");
+        exit(2);
+    }
+    char bufor[MAX_LINE], *slowa[MAX_LINE], tmp[MAX_LINE];
+    memset(slowa, NULL, MAX_LINE);
+    memset(tmp, NULL, MAX_LINE);
+    memset(bufor, NULL, MAX_LINE);
+    int i = -1, i_tmp = 0, len = 0, i_slowa = 0, len_buffor;
+    while (++i < MAX_LINES && fgets(bufor, MAX_LINE, fdd)) {
+        len_buffor = strlen(bufor);
+        bufor[len_buffor - 1] = '\0';
+        for (int j = 0; bufor[j] != '\0'; j++) {
+            if (bufor[j] != ':' && bufor[j] != '\0') {
+                tmp[i_tmp] = bufor[j];
+                i_tmp++;
+            } else if (bufor[j] == ':') {
+                len = strlen(tmp);
+                tmp[len] = '\0';
+                if ((slowa[i_slowa] = (char *) malloc((unsigned) len)) == (char *) NULL) {
+                    printf("Brak pamieci\n");
+                    exit(3);
+                }
+                strcpy(slowa[i_slowa], tmp);
+                i_slowa++;
+                i_tmp = 0;
+                memset(tmp, NULL, MAX_LINE);
+            } else continue;
+        }
+    }
+    int nomer_slowa;
+    while (1) {
+        printf("Podaj numer slowa jakie chcesz znalesc"
+               " (min 1, max %d): ", i_slowa);
+        scanf("%d", &nomer_slowa);
+        if (!(nomer_slowa <= i_slowa && nomer_slowa > 0)) {
+            printf("Niepoprawne wprowadzanie liczby!\n"
+                   "Sprobuj ponownie\n");
+            continue;
+        } else break;
+    }
+    printf("To slowo: %s", slowa[nomer_slowa - 1]);
+    fclose(fdd);
+    fdd = NULL;
+}
+
 int main() {
     //zad11();
     //zad15();
     //zad16();
-    zad17();
+    //zad17()???;
+    zad18();
     return 0;
 }
