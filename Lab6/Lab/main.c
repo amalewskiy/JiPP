@@ -141,6 +141,7 @@ void zad16() {
 
 void zad17() {
     char LU[MAX_LINE], bufor[MAX_LINE], *d[MAX_LINES];
+    memset(d, ' ', MAX_LINES);
     int linia_uzytkownika, po_linii, max = liczba_linij();
     int i = -1, len;
     fd = NULL;
@@ -179,10 +180,17 @@ void zad17() {
     fseek(fd, 0, SEEK_SET);
     bool qwerty = true;
     while (++i < MAX_LINES && fgets(bufor, MAX_LINE, fd)) {
-        if (i == linia_uzytkownika - 1 && qwerty) {
-            i--;
-            qwerty = false;
-        } else if (i == po_linii - 1) {
+        if (i == linia_uzytkownika - 1) {
+            fgets(bufor, MAX_LINE, fd);
+            len = strlen(bufor);
+            bufor[len - 1] = '\0';
+            if ((d[i] = (char *) malloc((unsigned) len)) == (char *) NULL) {
+                printf("Brak pamieci\n");
+                exit(3);
+            }
+            strcpy(d[i], bufor);
+        } else if (i == po_linii) {
+            linia_uzytkownika++;
             len = strlen(LU);
             LU[len - 1] = '\0';
             if ((d[i] = (char *) malloc((unsigned) len)) == (char *) NULL) {
@@ -226,9 +234,9 @@ void zad18() {
         exit(2);
     }
     char bufor[MAX_LINE], *slowa[MAX_LINE], tmp[MAX_LINE];
-    memset(slowa, NULL, MAX_LINE);
-    memset(tmp, NULL, MAX_LINE);
-    memset(bufor, NULL, MAX_LINE);
+    memset(slowa, ' ', MAX_LINE);
+    memset(tmp, ' ', MAX_LINE);
+    memset(bufor, ' ', MAX_LINE);
     int i = -1, i_tmp = 0, len = 0, i_slowa = 0, len_buffor;
     while (++i < MAX_LINES && fgets(bufor, MAX_LINE, fdd)) {
         len_buffor = strlen(bufor);
@@ -247,7 +255,7 @@ void zad18() {
                 strcpy(slowa[i_slowa], tmp);
                 i_slowa++;
                 i_tmp = 0;
-                memset(tmp, NULL, MAX_LINE);
+                memset(tmp, ' ', MAX_LINE);
             } else continue;
         }
     }
@@ -267,11 +275,69 @@ void zad18() {
     fdd = NULL;
 }
 
+void zad19(){
+    fd = NULL;
+    if (!(fd = fopen("DANE_2.txt", "r"))) {
+        printf("Blad otwarcia zbioru\n");
+        exit(2);
+    }
+    char litery[] = {'a',165,'b','c',134,'d','e',169,'f','g','h','i','j','k','l',136,
+                     'm','n',228,'o',162,'p','q','r','s',152,'t','u','v','w','x','y',
+                     'z',190,171,'A',164,'B','C',143,'D','E',168,'F','G','H','I','J',
+                     'K','L',157,'M','N',227,'O',224,'P','Q','R','S',151,'T','U','V',
+                     'W','X','Y','Z',189,141,' ','.',',','?',':','-','0','1','2','3',
+                     '4','5','6','7','8','9','!','\0' };
+
+    char *mors[] = { ".­",".­.­","­...","­.­.","­.­..","­..",".","..­..","..­.","­­.",
+                     "....","..",".­­­","­.­",".­..",".­..­","­­","­.","­­.­­","­­­","­­­."
+            ,".­­.","­­.­",".­.","...","...­...","­","..­","...­",".­­","­..­","­.­­"
+            ,"­­..","­­..­","­­",".­",".­.­","­...","­.­.","­.­..","­..",".","..­.."
+            ,"..­.","­­.","....","..",".­­­","­.­",".­..",".­..­","­­","­.","­­.­­"
+            ,"­­­","­­­.",".­­.","­­.­",".­.", "...","...­...","­","..­","...­",".­­"
+            ,"­..­","­.­­","­­..","­­..­","­­","   ",".­.­.­","­­..­­","..­­..","­­­..."
+            ,"­....­","­­­­­",".­­­­","..­­­","...­­","....­",".....","­....","­­..."
+            ,"­­­..","­­­­.","!",0 };
+
+    char bufor[MAX_LINE], **nowy_tekst;
+    nowy_tekst = (char)malloc(sizeof(char*) * MAX_LINE);
+    memset(bufor, ' ', MAX_LINE);
+    int i = 0, len, len_litery = strlen(litery);
+    while (++i < MAX_LINES && fgets(bufor, MAX_LINE, fd)) {
+        len = strlen(bufor);
+        bufor[len - 1] = '\0';
+        if ((nowy_tekst[i] = (char *) malloc((char) len)) == (char *) NULL) {
+            printf("Brak pamieci\n");
+            exit(3);
+        }
+        for (int j = 0; bufor[j] != '\0'; j++) {
+            for (int k = 0; k < len_litery; k++) {
+                if ((int) bufor[j] == (int) litery[k]) {
+                    nowy_tekst[i][j] = mors[k];
+                    break;
+                }
+            }
+        }
+    }
+    FILE *fd19;
+    fd19 = fopen("DANE_ZAD19.txt", "w");
+    for (int j = 0; j < i; j++) {
+        for(int h = 0; h < 88; h++){
+            fprintf(fd19, "%s ", nowy_tekst[j][h]);
+        }
+        fprintf(fd19, "\n");
+    }
+    fclose(fd);
+    fclose(fd19);
+    fd = NULL;
+    fd19 = NULL;
+}
+
 int main() {
     //zad11();
     //zad15();
     //zad16();
-    //zad17()???;
-    zad18();
+    //zad17();
+    //zad18();
+    zad19();
     return 0;
 }
