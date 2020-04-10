@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 
 #define MAX_LINE 256
 #define MAX_LINES 200
@@ -178,7 +177,6 @@ void zad17() {
     }
     i = -1;
     fseek(fd, 0, SEEK_SET);
-    bool qwerty = true;
     while (++i < MAX_LINES && fgets(bufor, MAX_LINE, fd)) {
         if (i == linia_uzytkownika - 1) {
             fgets(bufor, MAX_LINE, fd);
@@ -275,56 +273,90 @@ void zad18() {
     fdd = NULL;
 }
 
-void zad19(){
+void zad19() {
+    FILE *fd19;
     fd = NULL;
-    if (!(fd = fopen("DANE_2.txt", "r"))) {
+    if (!(fd = fopen("DANE.txt", "r"))) {
         printf("Blad otwarcia zbioru\n");
         exit(2);
     }
-    char litery[] = {'a',165,'b','c',134,'d','e',169,'f','g','h','i','j','k','l',136,
-                     'm','n',228,'o',162,'p','q','r','s',152,'t','u','v','w','x','y',
-                     'z',190,171,'A',164,'B','C',143,'D','E',168,'F','G','H','I','J',
-                     'K','L',157,'M','N',227,'O',224,'P','Q','R','S',151,'T','U','V',
-                     'W','X','Y','Z',189,141,' ','.',',','?',':','-','0','1','2','3',
-                     '4','5','6','7','8','9','!','\0' };
+    char litery[] = {'a', 165, 'b', 'c', 134, 'd', 'e', 169, 'f', 'g', 'h', 'i', 'j', 'k', 'l', 136,
+                     'm', 'n', 228, 'o', 162, 'p', 'q', 'r', 's', 152, 't', 'u', 'v', 'w', 'x', 'y',
+                     'z', 190, 171, 'A', 164, 'B', 'C', 143, 'D', 'E', 168, 'F', 'G', 'H', 'I', 'J',
+                     'K', 'L', 157, 'M', 'N', 227, 'O', 224, 'P', 'Q', 'R', 'S', 151, 'T', 'U', 'V',
+                     'W', 'X', 'Y', 'Z', 189, 141, ' ', '.', ',', '?', ':', '-', '0', '1', '2', '3',
+                     '4', '5', '6', '7', '8', '9', '!', '\0'};
 
-    char *mors[] = { ".­",".­.­","­...","­.­.","­.­..","­..",".","..­..","..­.","­­.",
-                     "....","..",".­­­","­.­",".­..",".­..­","­­","­.","­­.­­","­­­","­­­."
-            ,".­­.","­­.­",".­.","...","...­...","­","..­","...­",".­­","­..­","­.­­"
-            ,"­­..","­­..­","­­",".­",".­.­","­...","­.­.","­.­..","­..",".","..­.."
-            ,"..­.","­­.","....","..",".­­­","­.­",".­..",".­..­","­­","­.","­­.­­"
-            ,"­­­","­­­.",".­­.","­­.­",".­.", "...","...­...","­","..­","...­",".­­"
-            ,"­..­","­.­­","­­..","­­..­","­­","   ",".­.­.­","­­..­­","..­­..","­­­..."
-            ,"­....­","­­­­­",".­­­­","..­­­","...­­","....­",".....","­....","­­..."
-            ,"­­­..","­­­­.","!",0 };
+    char *mors[] = {".-", ".-.-", "-...", "-.-.", "-.-..", "-..", ".", "..-..", "..-.", "--.",
+                    "....", "..", ".---", "-.-", ".-..", ".-..-", "--", "-.", "--.--", "---", "---.", ".--.", "--.-",
+                    ".-.", "...", "...-...", "-", "..-", "...-", ".--", "-..-", "-.--", "--..", "--..-", "--", ".-",
+                    ".-.-", "-...", "-.-.", "-.-..", "-..", ".", "..-..", "..-.", "--.", "....", "..", ".---", "-.-",
+                    ".-..", ".-..­", "--", "-.", "--.--", "---", "---.", ".--.", "--.-", ".-.", "...", "...-...", "-",
+                    "..-", "...-", ".--", "-..-", "-.--", "--..", "--..-", "--", "   ", ".-.-.-", "--..--", "..--..",
+                    "---...", "-....-", "-----", ".----", "..---", "...--", "....-", ".....", "-....", "--...", "---..",
+                    "----.", "!", 0};
 
-    char bufor[MAX_LINE], **nowy_tekst;
-    nowy_tekst = (char)malloc(sizeof(char*) * MAX_LINE);
+
+    char bufor[MAX_LINE];
     memset(bufor, ' ', MAX_LINE);
-    int i = 0, len, len_litery = strlen(litery);
-    while (++i < MAX_LINES && fgets(bufor, MAX_LINE, fd)) {
-        len = strlen(bufor);
-        bufor[len - 1] = '\0';
-        if ((nowy_tekst[i] = (char *) malloc((char) len)) == (char *) NULL) {
-            printf("Brak pamieci\n");
-            exit(3);
-        }
-        for (int j = 0; bufor[j] != '\0'; j++) {
-            for (int k = 0; k < len_litery; k++) {
-                if ((int) bufor[j] == (int) litery[k]) {
-                    nowy_tekst[i][j] = mors[k];
-                    break;
+    int i = -1, len, len_litery = strlen(litery);
+    int typ_kodowania;
+    while (1) {
+        printf("Chcesz tekst zakodowac (1) lub dekodowac (0)?: ");
+        scanf("%d", &typ_kodowania);
+        if (typ_kodowania != 1 && typ_kodowania != 0) {
+            printf("Niepoprawne wprowadzanie liczby!\n"
+                   "Sprobuj ponownie\n");
+            continue;
+        } else break;
+    }
+    if (typ_kodowania) {
+        fd19 = fopen("DANE_ZAKODOWANE.txt", "w");
+        while (++i < MAX_LINES && fgets(bufor, MAX_LINE, fd)) {
+            len = strlen(bufor);
+            bufor[len - 1] = '\0';
+            for (int j = 0; bufor[j] != '\0'; j++) {
+                if ((int) bufor[j] < 0) { continue; }
+                for (int k = 0; k < len_litery; k++) {
+                    if ((int) bufor[j] == (int) litery[k]) {
+                        fprintf(fd19, "%s ", mors[k]);
+                        break;
+                    }
                 }
             }
+            fprintf(fd19, "\n");
         }
-    }
-    FILE *fd19;
-    fd19 = fopen("DANE_ZAD19.txt", "w");
-    for (int j = 0; j < i; j++) {
-        for(int h = 0; h < 88; h++){
-            fprintf(fd19, "%s ", nowy_tekst[j][h]);
+    } else {
+        fd19 = fopen("DANE_DEKODOWANE.txt", "w");
+        char nowa_litera[7];
+        int i_tmp = 0, space = 0;
+        memset(nowa_litera, ' ', 7);
+        while (++i < MAX_LINES && fgets(bufor, MAX_LINE, fd)) {
+            len = strlen(bufor);
+            bufor[len - 1] = '\0';
+            for (int j = 0; bufor[j] != '\0'; j++) {
+                if ((int) bufor[j] < 0) { continue; }
+                if (bufor[j] != ' ') {
+                    space = 0;
+                    nowa_litera[i_tmp++] = bufor[j];
+                } else if (bufor[j] == ' ' && (space == 0 || space == 4)) {
+                    space++;
+                    nowa_litera[i_tmp] = '\0';
+                    for (int k = 0; k < len_litery; k++) {
+                        if (!(strcmp(nowa_litera, mors[k]))) {
+                            fprintf(fd19, "%c", litery[k]);
+                            memset(nowa_litera, ' ', 7);
+                            i_tmp = 0;
+                            break;
+                        }
+                    }
+                } else if (space < 4) {
+                    space++;
+                    nowa_litera[i_tmp++] = bufor[j];
+                }
+            }
+            fprintf(fd19, "\n");
         }
-        fprintf(fd19, "\n");
     }
     fclose(fd);
     fclose(fd19);
@@ -338,6 +370,6 @@ int main() {
     //zad16();
     //zad17();
     //zad18();
-    zad19();
+    //zad19();
     return 0;
 }
