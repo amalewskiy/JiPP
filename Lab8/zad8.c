@@ -6,7 +6,7 @@
 
 extern void error(int, char *);
 
-extern double *DajWekt(int);
+extern double *DajWekt(int n);
 
 extern void CzytWekt(FILE *fd, double *we, int n);
 
