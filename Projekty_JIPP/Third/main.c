@@ -1,5 +1,4 @@
 //Nr albumu: 135688
-//Nr projektu: 33
 
 #include "function.h"
 #define MAX_ARR 20
