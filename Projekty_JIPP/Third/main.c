@@ -1,4 +1,3 @@
-//Nr albumu: 135688
 //Nr projektu: 33
 
 #include "function.h"
